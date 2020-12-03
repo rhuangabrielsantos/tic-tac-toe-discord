@@ -1,0 +1,7 @@
+{
+  "name": "tic-tac-toe-discord",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "rhuangabrielsantos <rhuan.santos@db1.com.br>",
+  "license": "MIT"
+}
