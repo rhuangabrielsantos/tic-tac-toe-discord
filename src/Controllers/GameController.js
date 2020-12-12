@@ -1,43 +1,16 @@
-const { 
-    validateSecondPlayerNull, 
-    validateMoreThanOneAdversary,
-    validateAdversaryIsValid,
-    validateWhetherPlayersAlreadyHaveAnActivatedGame
-} = require('./validator');
+const { generateEmptyBoard, generateBoard } = require('../Services/BoardService')
+const { createEmbedAlert } = require('../utils');
+const { createGame } = require('../Services/GameService');
 
-const { 
-    generateEmptyBoard, 
-    generateBoard 
-} = require('./board')
-
-const {
-    createEmbedAlert,
-    formatAdversaryId
-} = require('./helper');
-
-const Game = require('./Models/Game');
-
-function play (players, messageInstance) {
-    let idFirstPlayer = messageInstance.author.id;
-    let idSecondPlayer = formatAdversaryId(players[0]);
-
-    validateSecondPlayerNull(players, messageInstance);
-    validateMoreThanOneAdversary(players, messageInstance);
-    validateAdversaryIsValid(players, messageInstance);
-    validateWhetherPlayersAlreadyHaveAnActivatedGame(idFirstPlayer, idSecondPlayer);
-
+async function play (players, messageInstance) {
     const board = generateEmptyBoard();
 
-    return;
+    let gameIsCreated = await createGame(players, messageInstance, board.markings);
 
-    Game.create({
-        'first_player': idFirstPlayer,
-        'second_player': idSecondPlayer,
-        'maked_board': '{0,0,0,0,0,0,0,0,0}'
-    })
-
-    messageInstance.reply('você começa!');
-    messageInstance.channel.send(board);
+    if (gameIsCreated) {
+        messageInstance.reply('você começa!');
+        messageInstance.channel.send(board.view);
+    }
 }
 
 function mark (action, message) {

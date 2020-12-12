@@ -26,8 +26,13 @@ function formatAdversaryId(adversaryMention) {
     return adversaryMention.replace('<@!', '').replace('>', '')
 }
 
+function verifyArrayIsEmpty(array) {
+    return (array.length === 0);
+}
+
 module.exports = { 
     getArgumentsByDiscordMessage, 
     createEmbedAlert, 
-    formatAdversaryId
+    formatAdversaryId,
+    verifyArrayIsEmpty
 }

@@ -2,8 +2,8 @@ require('dotenv').config();
 require('./server');
 
 const { Client } = require('discord.js');
-const { getArgumentsByDiscordMessage } = require('./helper');
-const { recordedCommands } = require('./game');
+const { getArgumentsByDiscordMessage } = require('./utils');
+const { recordedCommands } = require('./Controllers/GameController');
 
 const client = new Client();
 

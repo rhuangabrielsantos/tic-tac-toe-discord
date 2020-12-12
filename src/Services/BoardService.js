@@ -1,9 +1,16 @@
 function generateEmptyBoard() {
-    return ':blue_square::one::two::three::blue_square:\n' +
+    let view = ':blue_square::one::two::three::blue_square:\n' +
         ':regional_indicator_a::white_large_square::white_large_square::white_large_square::regional_indicator_a:\n' +
         ':regional_indicator_b::white_large_square::white_large_square::white_large_square::regional_indicator_b:\n' +
         ':regional_indicator_c::white_large_square::white_large_square::white_large_square::regional_indicator_c:\n' +
         ':blue_square::one::two::three::blue_square:';
+
+    let markings = '0|0|0|0|0|0|0|0|0';
+
+    return {
+        view,
+        markings
+    }
 }
 
 function generateBoard(markedBoard) {

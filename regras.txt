@@ -1,15 +1,14 @@
 comandos
-[ ] play
+[x] play
 [ ] mark
 [ ] board
 [ ] help
+[ ] endGame
 
 comandos futuro
 [ ] highscore
 
 regras
-[ ] primeiro parametro do comando play será x e o segundo será bola
-[ ] já existe um jogo pra aqueles jogadores
-[x] validar quantidade de jogadores 2
-[x] validar se os jogadores são validos
+[ ] primeiro parametro do comando mark será x e o segundo será bola
 [ ] regra de fim de jogo (vitoria/empate)
+[ ] validar se o usuário é um bot
