@@ -1,5 +1,6 @@
 const { MessageMentions } = require('discord.js')
 const { createEmbedAlert, formatAdversaryId } = require('./helper');
+const Game = require('./Models/Game');
 
 function validateSecondPlayerNull(action, message) {
     if (action.length === 0) {
@@ -48,8 +49,18 @@ function validateAdversaryIsValid(action, message) {
     }
 }
 
+async function validateWhetherPlayersAlreadyHaveAnActivatedGame(idFirstPlayer, idSecondPlayer) {
+    let game = await Game.find({
+        first_player: idFirstPlayer,
+        second_player: idSecondPlayer
+    }).exec();
+
+    console.log(game);
+}
+
 module.exports = { 
     validateSecondPlayerNull, 
     validateMoreThanOneAdversary, 
-    validateAdversaryIsValid 
+    validateAdversaryIsValid,
+    validateWhetherPlayersAlreadyHaveAnActivatedGame
 }

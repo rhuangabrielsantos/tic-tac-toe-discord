@@ -1,7 +1,8 @@
 const { 
     validateSecondPlayerNull, 
     validateMoreThanOneAdversary,
-    validateAdversaryIsValid
+    validateAdversaryIsValid,
+    validateWhetherPlayersAlreadyHaveAnActivatedGame
 } = require('./validator');
 
 const { 
@@ -16,22 +17,27 @@ const {
 
 const Game = require('./Models/Game');
 
-function play (action, message) {
-    validateSecondPlayerNull(action, message)
-    validateMoreThanOneAdversary(action, message)
-    validateAdversaryIsValid(action, message)
-    // Validar se existe partida entre os participantes
+function play (players, messageInstance) {
+    let idFirstPlayer = messageInstance.author.id;
+    let idSecondPlayer = formatAdversaryId(players[0]);
 
-    const board = generateEmptyBoard()
+    validateSecondPlayerNull(players, messageInstance);
+    validateMoreThanOneAdversary(players, messageInstance);
+    validateAdversaryIsValid(players, messageInstance);
+    validateWhetherPlayersAlreadyHaveAnActivatedGame(idFirstPlayer, idSecondPlayer);
+
+    const board = generateEmptyBoard();
+
+    return;
 
     Game.create({
-        'player_one': message.author.id,
-        'player_two': formatAdversaryId(action[0]),
+        'first_player': idFirstPlayer,
+        'second_player': idSecondPlayer,
         'maked_board': '{0,0,0,0,0,0,0,0,0}'
     })
 
-    message.reply('você começa!')
-    message.channel.send(board);
+    messageInstance.reply('você começa!');
+    messageInstance.channel.send(board);
 }
 
 function mark (action, message) {
@@ -50,8 +56,8 @@ function board (action, message) {
     // Obter os campos que foram preenchidos do banco 
     const mocDate = [2, 1, 0, 0, 1, 2, 2, 0, 1];
 
-    const board = generateBoard(mocDate)
-    message.reply('o tabuleiro está assim!')
+    const board = generateBoard(mocDate);
+    message.reply('o tabuleiro está assim!');
     message.channel.send(board);
 }
 

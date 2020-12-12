@@ -19,6 +19,10 @@ function createEmbedAlert(title, description) {
 }
 
 function formatAdversaryId(adversaryMention) {
+    if(!adversaryMention) {
+        return;
+    }
+
     return adversaryMention.replace('<@!', '').replace('>', '')
 }
 

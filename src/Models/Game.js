@@ -1,11 +1,11 @@
 const { Schema, model } = require('mongoose');
 
 const GameSchema = new Schema ({
-    'player_one': {
+    'first_player': {
         type: String,
         required: true
     },
-    'player_two': {
+    'second_player': {
         type: String,
         required: true
     },
