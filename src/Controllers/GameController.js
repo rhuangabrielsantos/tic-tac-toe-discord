@@ -1,6 +1,6 @@
 const { generateEmptyBoard, generateBoard } = require('../Services/BoardService')
 const { createEmbedAlert } = require('../utils');
-const { createGame } = require('../Services/GameService');
+const { createGame, markACell } = require('../Services/GameService');
 
 async function play (players, messageInstance) {
     const board = generateEmptyBoard();
@@ -13,9 +13,9 @@ async function play (players, messageInstance) {
     }
 }
 
-function mark (action, message) {
-    // Validar se o usuário que enviou o comando possui uma partida
-    // Validar se a marcação é valida
+function mark (players, typedCell, message) {
+    
+    markACell(action, message);
 
     // Obter o id da partida
     // Salvar no banco a marcação

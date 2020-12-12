@@ -1,5 +1,6 @@
 const Game = require('../Models/Game');
 const { validatePlayNewGame } = require('../Validator/PlayValidator');
+const { validateMarkACell } = require('../Validator/MarkValidator');
 const { formatAdversaryId } = require('../utils');
 
 async function createGame(players, messageInstance, boardMarkings) {
@@ -21,6 +22,13 @@ async function createGame(players, messageInstance, boardMarkings) {
     return true;
 }
 
+async function markACell(players, typedCell, messageInstance) {
+    let idPlayer = messageInstance.author.id;
+    validateMarkACell(idPlayer, typedCell, messageInstance);
+    
+}
+
 module.exports = {
-    createGame
+    createGame, 
+    markACell
 }
