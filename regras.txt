@@ -1,7 +1,7 @@
 comandos
 [x] play
-[ ] mark
-[ ] board
+[ ] mark 99%
+[x] board
 [ ] help
 [ ] endGame
 

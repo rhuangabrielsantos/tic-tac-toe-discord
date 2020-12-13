@@ -19,6 +19,8 @@ async function mark (action, messageInstance) {
     if (boardView) {
         messageInstance.channel.send(boardView);
     }
+
+
 }
 
 function board (action, message) {

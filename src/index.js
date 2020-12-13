@@ -7,6 +7,7 @@ const { recordedCommands } = require('./Controllers/GameController');
 
 const client = new Client();
 
+
 client.on('message', message => {
     if (message.author.not) return;
     if (!message.content.startsWith("-ttt")) return;

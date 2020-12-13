@@ -37,7 +37,7 @@ async function validateMarkACell(idPlayer, action, messageInstance) {
 }
 
 function validateIfPlayerHasActiveGame(playerGame) {
-    if (verifyArrayIsEmpty(playerGame)) {
+    if (verifyArrayIsEmpty(playerGame)) {        
         let embed = createEmbedAlert(
             'Você deve ter um jogo ativo para marcar uma casa, espertão :clown:',
             'Para visualizar o jogo existente, envie **-ttt board**'
@@ -78,7 +78,7 @@ function validateIfCellIsBlank(typedCell, playerGame) {
     let markings = getFirstValueInTheArray(playerGame).marked_board;
     let boardPosition = cell[typedCell];
     
-    if( [boardPosition] !== 0) {
+    if(markings[boardPosition] !== 0) {
         return {
             error: ERROR,
             message: defaultEmbed
@@ -89,8 +89,10 @@ function validateIfCellIsBlank(typedCell, playerGame) {
 }
 
 function validateIfIsPlayerTurn(playerGame, idPlayer) {
-    let markings = getFirstValueInTheArray(playerGame).marked_board;
-    let playerNumber = getPlayerNumber(playerGame, idPlayer);
+    let game = getFirstValueInTheArray(playerGame);
+
+    let markings = game.marked_board;
+    let playerNumber = getPlayerNumber(game, idPlayer);
 
     let turnsFirstPlayer = 0;
     let turnsSecondPlayer = 0;
@@ -114,7 +116,7 @@ function validateIfIsPlayerTurn(playerGame, idPlayer) {
     if(playerNumber === marks.O && turnsFirstPlayer > turnsSecondPlayer) {
         return {};
     }
-
+    
     let embed = createEmbedAlert(
         'Não é a sua vez princeso, pera ae :clown:',
         ''
