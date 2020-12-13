@@ -1,6 +1,5 @@
-const { MessageMentions } = require('discord.js')
 const { createEmbedAlert, formatAdversaryId, verifyArrayIsEmpty } = require('../utils');
-const Game = require('../Models/Game');
+const { getGameByPlayerId } = require('../Repositories/PlayerRepository');
 
 const ERROR = 1;
 
@@ -91,21 +90,13 @@ function validateAdversaryIsValid(players, messageInstance) {
 }
 
 async function validateWhetherPlayersAlreadyHaveAnActivatedGame(idFirstPlayer, idSecondPlayer) {
-    let game = await Game.find().or([
-        { 
-            first_player: idFirstPlayer,
-            second_player: idSecondPlayer
-        },
-        { 
-            first_player: idSecondPlayer,
-            second_player: idFirstPlayer
-        }
-    ]).exec();
+    let firstHasAlreadyAGame = await getGameByPlayerId(idFirstPlayer);
+    let secondHasAlreadyAGame = await getGameByPlayerId(idSecondPlayer);
 
-    if (!verifyArrayIsEmpty(game)) {
+    if (!verifyArrayIsEmpty(firstHasAlreadyAGame) || !verifyArrayIsEmpty(secondHasAlreadyAGame)) {
         let embed = createEmbedAlert(
-            'Já existe um jogo entre os dois jogadores :clown:',
-            'Para visualizar o jogo existente, envie **-ttt board**'
+            'Você já possui uma partida em andamento :clown:',
+            'Para visualizar o jogo em andamento, envie **-ttt board**'
         );
 
         return {
@@ -116,8 +107,6 @@ async function validateWhetherPlayersAlreadyHaveAnActivatedGame(idFirstPlayer, i
 
     return {};
 }
-
-
 
 module.exports = { 
     validatePlayNewGame

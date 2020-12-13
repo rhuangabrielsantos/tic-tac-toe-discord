@@ -1,4 +1,4 @@
-const { generateEmptyBoard, generateBoard } = require('../Services/BoardService')
+const { generateEmptyBoard, generateBoardView } = require('../Services/BoardService')
 const { createEmbedAlert } = require('../utils');
 const { createGame, markACell } = require('../Services/GameService');
 
@@ -13,14 +13,12 @@ async function play (players, messageInstance) {
     }
 }
 
-function mark (players, typedCell, message) {
-    
-    markACell(action, message);
+async function mark (action, messageInstance) {
+    let boardView = await markACell(action, messageInstance);
 
-    // Obter o id da partida
-    // Salvar no banco a marcação
-
-    // Enviar o board pro usuário atualizado
+    if (boardView) {
+        messageInstance.channel.send(boardView);
+    }
 }
 
 function board (action, message) {
@@ -29,7 +27,7 @@ function board (action, message) {
     // Obter os campos que foram preenchidos do banco 
     const mocDate = [2, 1, 0, 0, 1, 2, 2, 0, 1];
 
-    const board = generateBoard(mocDate);
+    const board = generateBoardView(mocDate);
     message.reply('o tabuleiro está assim!');
     message.channel.send(board);
 }

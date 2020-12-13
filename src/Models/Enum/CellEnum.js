@@ -10,4 +10,9 @@ const cell = {
     C3: 8
 }
 
-module.exports = { cell }
+const marks = {
+    X: 1,
+    O: 2
+}
+
+module.exports = { cell, marks }

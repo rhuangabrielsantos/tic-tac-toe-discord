@@ -1,7 +1,9 @@
 const Game = require('../Models/Game');
 const { validatePlayNewGame } = require('../Validator/PlayValidator');
 const { validateMarkACell } = require('../Validator/MarkValidator');
-const { formatAdversaryId } = require('../utils');
+const { formatAdversaryId, getPlayerNumber, getFirstValueInTheArray } = require('../utils');
+const { getGameByPlayerId, refreshMarkingsInBoardByPlayerId } = require("../Repositories/PlayerRepository");
+const { refreshBoard } = require("./BoardService");
 
 async function createGame(players, messageInstance, boardMarkings) {
     let idFirstPlayer = messageInstance.author.id;
@@ -16,16 +18,30 @@ async function createGame(players, messageInstance, boardMarkings) {
     await Game.create({
         'first_player': idFirstPlayer,
         'second_player': idSecondPlayer,
-        'maked_board': boardMarkings
+        'marked_board': boardMarkings
     });
 
     return true;
 }
 
-async function markACell(players, typedCell, messageInstance) {
+async function markACell(action, messageInstance) {
     let idPlayer = messageInstance.author.id;
-    validateMarkACell(idPlayer, typedCell, messageInstance);
+
+    let markIsNotValid = await validateMarkACell(idPlayer, action, messageInstance);
+    let typedCell = getFirstValueInTheArray(action);
+
+    if(markIsNotValid) {
+        return false;
+    }
+
+    let playerGame = getFirstValueInTheArray(await getGameByPlayerId(idPlayer));
+    let playerNumber = getPlayerNumber(playerGame, idPlayer);
+
+    let refreshedBoard = refreshBoard(playerGame.marked_board, playerNumber, typedCell);
     
+    await refreshMarkingsInBoardByPlayerId(idPlayer, refreshedBoard.markings);
+
+    return refreshedBoard.view;
 }
 
 module.exports = {
