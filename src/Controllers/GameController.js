@@ -44,6 +44,7 @@ function help (action, message) {
         'Adicione **-ttt** antes de qualquer comando\n\n' +
         ':loudspeaker: `play [adversario]` - Inicia um novo jogo\n' +
         ':pencil2: `mark [posicao]` - Marca uma casa\n' +
+        ':rooster: `end` - Termina uma partida\n' +
         ':mag: `board` - Exibe o tabuleiro\n\n' +
         'Desenvolvido por **@rhuangabrielsantos @anaclaudialimacosta**';
 
