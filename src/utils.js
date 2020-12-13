@@ -43,11 +43,46 @@ function getPlayerNumber(playerGame, idPlayer) {
     return marks.O;
 }
 
+function getPlayersMarkings(markings) {
+    let firstPlayerMarks = [];
+    let secondPlayerMarks = [];
+    
+    if (!markings) {
+        return {
+            firstPlayerMarks,
+            secondPlayerMarks
+        }
+    }
+
+    markings.forEach((mark, index) => {
+        if(mark === marks.X) {
+            firstPlayerMarks.push(index);
+            return;
+        }
+
+        if(mark === marks.O) {
+            secondPlayerMarks.push(index);
+            return;
+        }
+    });
+
+    return {
+        firstPlayerMarks,
+        secondPlayerMarks
+    }
+}
+
+function getIdPlayerByMessage(messageInstance) {
+    return messageInstance.author.id;
+}
+
 module.exports = { 
     getArgumentsByDiscordMessage, 
     createEmbedAlert, 
     formatAdversaryId,
     verifyArrayIsEmpty,
     getFirstValueInTheArray,
-    getPlayerNumber
+    getPlayerNumber,
+    getPlayersMarkings,
+    getIdPlayerByMessage
 }

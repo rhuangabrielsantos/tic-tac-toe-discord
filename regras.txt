@@ -1,14 +1,12 @@
 comandos
 [x] play
-[ ] mark 99%
+[x] mark
 [x] board
-[ ] help
-[ ] endGame
+[x] help
+[x] end
 
 comandos futuro
 [ ] highscore
 
 regras
-[ ] primeiro parametro do comando mark será x e o segundo será bola
-[ ] regra de fim de jogo (vitoria/empate)
 [ ] validar se o usuário é um bot

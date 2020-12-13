@@ -1,4 +1,21 @@
 const { cell } = require('../Models/Enum/CellEnum');
+const { getGameByPlayerId } = require('../Repositories/PlayerRepository');
+const { getIdPlayerByMessage, getFirstValueInTheArray } = require('../utils');
+const { validateShowBoard } = require('../Validator/BoardValidator');
+
+async function getBoard(messageInstance) {
+    let idPlayer = getIdPlayerByMessage(messageInstance);
+
+    let gameDoesNotActive = await validateShowBoard(idPlayer, messageInstance);
+
+    if(gameDoesNotActive) {
+        return;
+    }
+
+    let playerGame = getFirstValueInTheArray(await getGameByPlayerId(idPlayer));
+
+    return generateBoardView(playerGame.marked_board);
+}
 
 function generateEmptyBoard() {
     let view = ':blue_square::one::two::three::blue_square:\n' +
@@ -68,5 +85,6 @@ function createCell(mark) {
 module.exports = { 
     generateEmptyBoard,
     generateBoardView,
-    refreshBoard
+    refreshBoard,
+    getBoard
 }

@@ -1,6 +1,6 @@
-const { generateEmptyBoard, generateBoardView } = require('../Services/BoardService')
-const { createEmbedAlert } = require('../utils');
-const { createGame, markACell } = require('../Services/GameService');
+const { generateEmptyBoard, getBoard } = require('../Services/BoardService')
+const { createEmbedAlert, getIdPlayerByMessage } = require('../utils');
+const { createGame, markACell, verifyIfIsGameOver, endGame } = require('../Services/GameService');
 
 async function play (players, messageInstance) {
     const board = generateEmptyBoard();
@@ -14,22 +14,27 @@ async function play (players, messageInstance) {
 }
 
 async function mark (action, messageInstance) {
-    let boardView = await markACell(action, messageInstance);
+    let refreshedBoard = await markACell(action, messageInstance);
+    let idPlayer = getIdPlayerByMessage(messageInstance);
 
-    if (boardView) {
-        messageInstance.channel.send(boardView);
+    if (refreshedBoard.view) {
+        messageInstance.channel.send(refreshedBoard.view);
     }
 
-
+    let isGameOver = await verifyIfIsGameOver(refreshedBoard.markings, idPlayer)
+    
+    if(isGameOver) {
+        messageInstance.channel.send(isGameOver)
+    }
 }
 
-function board (action, message) {
-    // Validar se o usuário que enviou o comando possui uma partida
+async function board (action, message) {
+    let board = await getBoard(message);
 
-    // Obter os campos que foram preenchidos do banco 
-    const mocDate = [2, 1, 0, 0, 1, 2, 2, 0, 1];
+    if(!board) {
+        return;
+    }
 
-    const board = generateBoardView(mocDate);
     message.reply('o tabuleiro está assim!');
     message.channel.send(board);
 }
@@ -50,12 +55,23 @@ function help (action, message) {
     message.channel.send(embed);
 }
 
+async function end(action, message) {
+    let gameDoesNotOver = await endGame(message);
+
+    if(gameDoesNotOver) {
+        return;
+    }
+
+    message.reply('Ficou com medinho, foi? O jogo foi finalizado! :clown:');
+}
+
 function recordedCommands () {
     return {
         play,
         mark,
         board,
-        help
+        help,
+        end
     }
 }
 

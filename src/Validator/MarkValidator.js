@@ -1,7 +1,7 @@
 const { createEmbedAlert, verifyArrayIsEmpty, getFirstValueInTheArray, getPlayerNumber } = require('../utils');
 const { cell, marks } = require('../Models/Enum/CellEnum');
 const { getGameByPlayerId } = require("../Repositories/PlayerRepository");
-
+const { validateIfPlayerHasActiveGame } = require("./GameValidator")
 const ERROR = 1;
 
 let defaultEmbed = createEmbedAlert(
@@ -36,22 +36,6 @@ async function validateMarkACell(idPlayer, action, messageInstance) {
     }
 }
 
-function validateIfPlayerHasActiveGame(playerGame) {
-    if (verifyArrayIsEmpty(playerGame)) {        
-        let embed = createEmbedAlert(
-            'Você deve ter um jogo ativo para marcar uma casa, espertão :clown:',
-            'Para visualizar o jogo existente, envie **-ttt board**'
-        );
-
-        return {
-            error: ERROR,
-            message: embed
-        };
-    }
-
-    return {};
-}
-
 function validateIfTypedCellIsValid(typedCell) {
     if(!cell.hasOwnProperty(typedCell)) {
         return {
@@ -75,7 +59,13 @@ function validateTypedCellLength(action) {
 }
 
 function validateIfCellIsBlank(typedCell, playerGame) {
-    let markings = getFirstValueInTheArray(playerGame).marked_board;
+    let game = getFirstValueInTheArray(playerGame);
+
+    if (!game) {
+        return {};
+    }
+
+    let markings = game.marked_board;
     let boardPosition = cell[typedCell];
     
     if(markings[boardPosition] !== 0) {
@@ -91,6 +81,10 @@ function validateIfCellIsBlank(typedCell, playerGame) {
 function validateIfIsPlayerTurn(playerGame, idPlayer) {
     let game = getFirstValueInTheArray(playerGame);
 
+    if (!game) {
+        return {};
+    }
+    
     let markings = game.marked_board;
     let playerNumber = getPlayerNumber(game, idPlayer);
 

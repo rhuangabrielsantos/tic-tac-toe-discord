@@ -16,4 +16,11 @@ async function refreshMarkingsInBoardByPlayerId(idPlayer, refreshedBoard) {
     });
 }
 
-module.exports = { getGameByPlayerId, refreshMarkingsInBoardByPlayerId }
+async function deleteGame(idPlayer) {
+    return await Game.find().or([
+        { first_player: idPlayer },
+        { second_player: idPlayer }
+    ]).deleteOne();
+}
+
+module.exports = { getGameByPlayerId, refreshMarkingsInBoardByPlayerId, deleteGame }
