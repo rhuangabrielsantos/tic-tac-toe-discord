@@ -9,7 +9,7 @@ const client = new Client();
 
 client.on('message', message => {
     if (message.author.not) return;
-    if (!message.content.startsWith("-ttt")) return;
+    if (!message.content.startsWith(process.env.PREFIX)) return;
 
     const arguments = getArgumentsByDiscordMessage(message);
     const commands = recordedCommands();

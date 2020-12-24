@@ -41,7 +41,7 @@ async function board (action, message) {
 
 function help (action, message) {
     const description = 
-        'Adicione **-ttt** antes de qualquer comando\n\n' +
+        'Adicione **' + process.env.PREFIX + '** antes de qualquer comando\n\n' +
         ':loudspeaker: `play [adversario]` - Inicia um novo jogo\n' +
         ':pencil2: `mark [posicao]` - Marca uma casa\n' +
         ':rooster: `end` - Termina uma partida\n' +
