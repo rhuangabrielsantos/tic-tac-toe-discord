@@ -57,7 +57,7 @@ function validateIfPlayerHasActiveGame(playerGame) {
     if (verifyArrayIsEmpty(playerGame)) {        
         let embed = createEmbedAlert(
             'Você deve ter um jogo ativo para enviar esse comando, espertão :clown:',
-            'Para visualizar o jogo existente, envie **-ttt board**'
+            'Para visualizar o jogo existente, envie **' + process.env.PREFIX + ' board**'
         );
 
         return {
