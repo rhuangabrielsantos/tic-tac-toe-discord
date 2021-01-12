@@ -1,6 +1,6 @@
-const { generateEmptyBoard, getBoard } = require('../Services/BoardService')
+const { generateEmptyBoard, getBoard, generateBoardView } = require('../Services/BoardService')
 const { createEmbedAlert, getIdPlayerByMessage } = require('../utils');
-const { createGame, markACell, verifyIfIsGameOver, endGame } = require('../Services/GameService');
+const { createGame, acceptGameService, markACell, verifyIfIsGameOver, endGame, awaitReaction } = require('../Services/GameService');
 
 async function play (players, messageInstance) {
     const board = generateEmptyBoard();
@@ -8,8 +8,28 @@ async function play (players, messageInstance) {
     let gameIsCreated = await createGame(players, messageInstance, board.markings);
 
     if (gameIsCreated) {
-        messageInstance.reply('você começa!');
-        messageInstance.channel.send(board.view);
+        let secondPlayer = players[0];
+        let message = await messageInstance.channel.send(secondPlayer + ', você aceita o desafio?');
+
+        message.react('✅')
+            .then(() => message.react('⛔'))
+    }
+}
+
+async function acceptGame (client, reaction, user) {
+    const gameDescription = await acceptGameService(client, reaction, user);
+    const channelId = reaction.message.channel.id;
+
+    if (!gameDescription) {
+        return;
+    }
+
+    const board = generateBoardView(gameDescription.marked_board);
+    const mentionFirstPlayer = `<@!${gameDescription.first_player}>`
+
+    if (gameDescription) {
+        client.channels.cache.get(channelId).send(mentionFirstPlayer + 'você começa!');
+        client.channels.cache.get(channelId).send(board);
     }
 }
 
@@ -76,4 +96,4 @@ function recordedCommands () {
     }
 }
 
-module.exports = { recordedCommands }
+module.exports = { recordedCommands, acceptGame }

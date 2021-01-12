@@ -1,4 +1,4 @@
-const { createEmbedAlert, verifyArrayIsEmpty, getFirstValueInTheArray, getPlayerNumber } = require('../utils');
+const { createEmbedAlert, getFirstValueInTheArray, getPlayerNumber } = require('../utils');
 const { cell, marks } = require('../Models/Enum/CellEnum');
 const { getGameByPlayerId } = require("../Repositories/PlayerRepository");
 const { validateIfPlayerHasActiveGame } = require("./GameValidator")
@@ -19,6 +19,7 @@ async function validateMarkACell(idPlayer, action, messageInstance) {
 
     validations.push(validateTypedCellLength(action));
     validations.push(validateIfPlayerHasActiveGame(playerGame));
+    validations.push(validateThatTheGameWasAccepted(playerGame));
     validations.push(validateIfTypedCellIsValid(typedCell));
     validations.push(validateIfCellIsBlank(typedCell, playerGame));
     validations.push(validateIfIsPlayerTurn(playerGame, idPlayer));
@@ -120,6 +121,24 @@ function validateIfIsPlayerTurn(playerGame, idPlayer) {
         error: ERROR,
         message: embed
     };
+}
+
+function validateThatTheGameWasAccepted(playerGame) {
+    let game = getFirstValueInTheArray(playerGame);
+
+    if (game.active === false) {
+        let embed = createEmbedAlert(
+            'O adversário não aceitou o jogo ainda princeso, pera ae :clown:',
+            ''
+        );
+        
+        return {
+            error: ERROR,
+            message: embed
+        }
+    }
+
+    return {}
 }
 
 module.exports = { validateMarkACell }

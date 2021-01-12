@@ -23,4 +23,20 @@ async function deleteGame(idPlayer) {
     ]).deleteOne();
 }
 
-module.exports = { getGameByPlayerId, refreshMarkingsInBoardByPlayerId, deleteGame }
+async function activateGame(idPlayer) {
+    return await Game.find().or([
+        { first_player: idPlayer },
+        { second_player: idPlayer }
+    ]).updateOne({
+        active: true
+    });
+}
+
+async function getInactiveSecondPlayerGame(idPlayer) {
+    return await Game.find().and([
+        { active: 'false' },
+        { second_player: idPlayer }
+    ]).exec();
+}
+
+module.exports = { getGameByPlayerId, refreshMarkingsInBoardByPlayerId, deleteGame, activateGame, getInactiveSecondPlayerGame }

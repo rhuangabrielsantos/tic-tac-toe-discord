@@ -13,6 +13,10 @@ const GameSchema = new Schema ({
         type: Array,
         required: true
     },
+    'active': {
+        type: Boolean,
+        default: false
+    }
 })
 
 module.exports = model('Game', GameSchema);
