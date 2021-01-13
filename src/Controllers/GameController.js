@@ -66,7 +66,8 @@ function help (action, message) {
         ':loudspeaker: `play [adversario]` - Inicia um novo jogo\n' +
         ':pencil2: `mark [posicao]` - Marca uma casa\n' +
         ':rooster: `end` - Termina uma partida\n' +
-        ':mag: `board` - Exibe o tabuleiro\n\n' +
+        ':mag: `board` - Exibe o tabuleiro\n' +
+        ':trophy: `ranking` - Exibe o ranking do servidor\n\n' +
         'Desenvolvido por **@rhuangabrielsantos @anaclaudialimacosta**';
 
     const embed = createEmbedAlert(
