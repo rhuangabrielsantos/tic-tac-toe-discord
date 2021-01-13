@@ -7,14 +7,16 @@ const { refreshBoard } = require("./BoardService");
 const { verifyIfHasAWinner, verifyIfIsBoardFull } = require('../Validator/GameValidator');
 const { validateEndGame } = require('../Validator/EndGameValidator');
 const { validateAcceptGame } = require('../Validator/AcceptGameValidator');
+const { giveScoreToPlayer } = require('./RankingService');
 
 const { marks } = require('../Models/Enum/CellEnum');
 
 async function createGame(players, messageInstance, boardMarkings) {
-    let idFirstPlayer = messageInstance.author.id;
-    let idSecondPlayer = formatAdversaryId(players[0]);
+    const idFirstPlayer = messageInstance.author.id;
+    const idSecondPlayer = formatAdversaryId(players[0]);
+    const guildId = messageInstance.channel.guild.id;
 
-    let newGameIsNotValid = await validatePlayNewGame(players, idFirstPlayer, idSecondPlayer, messageInstance);
+    const newGameIsNotValid = await validatePlayNewGame(players, idFirstPlayer, idSecondPlayer, messageInstance);
 
     if(newGameIsNotValid) {
         return false;
@@ -23,7 +25,8 @@ async function createGame(players, messageInstance, boardMarkings) {
     await Game.create({
         'first_player': idFirstPlayer,
         'second_player': idSecondPlayer,
-        'marked_board': boardMarkings
+        'marked_board': boardMarkings,
+        'guild_id': guildId
     });
 
     return true;
@@ -54,21 +57,21 @@ async function acceptGameService(client, reaction, user) {
 }
 
 async function markACell(action, messageInstance) {
-    let idPlayer = getIdPlayerByMessage(messageInstance);
+    const idPlayer = getIdPlayerByMessage(messageInstance);
 
-    let markIsNotValid = await validateMarkACell(idPlayer, action, messageInstance);
-    let typedCell = getFirstValueInTheArray(action);
+    const markIsNotValid = await validateMarkACell(idPlayer, action, messageInstance);
+    const typedCell = getFirstValueInTheArray(action);
 
     if(markIsNotValid) {
         return false;
     }
 
-    let game = await getGameByPlayerId(idPlayer);
+    const game = await getGameByPlayerId(idPlayer);
     
-    let playerGame = getFirstValueInTheArray(game);
-    let playerNumber = getPlayerNumber(playerGame, idPlayer);
+    const playerGame = getFirstValueInTheArray(game);
+    const playerNumber = getPlayerNumber(playerGame, idPlayer);
 
-    let refreshedBoard = refreshBoard(playerGame.marked_board, playerNumber, typedCell);
+    const refreshedBoard = refreshBoard(playerGame.marked_board, playerNumber, typedCell);
     
     await refreshMarkingsInBoardByPlayerId(idPlayer, refreshedBoard.markings);
 
@@ -80,19 +83,24 @@ async function verifyIfIsGameOver(markings, playerId) {
         return false;
     }
 
-    let hasAWinner = verifyIfHasAWinner(markings);
-    let isBoardFull = verifyIfIsBoardFull(markings);
+    const hasAWinner = verifyIfHasAWinner(markings);
+    const isBoardFull = verifyIfIsBoardFull(markings);
+
+    const playerGame = getFirstValueInTheArray(await getGameByPlayerId(playerId));
 
     if(hasAWinner !== 0 || isBoardFull) {
         await deleteGame(playerId)
     }
         
     if(hasAWinner === marks.X) {
-        
+        await giveScoreToPlayer(playerGame.first_player, playerGame.guild_id);
+
         return createEmbedAlert('O X Ganhou', '');
     }
 
     if(hasAWinner === marks.O) {
+        await giveScoreToPlayer(playerGame.second_player, playerGame.guild_id);
+
         return createEmbedAlert('A O Ganhou', '');
     }
 

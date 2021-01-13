@@ -16,6 +16,10 @@ const GameSchema = new Schema ({
     'active': {
         type: Boolean,
         default: false
+    },
+    'guild_id': {
+        type: Number,
+        required: true
     }
 })
 

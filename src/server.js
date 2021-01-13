@@ -7,7 +7,10 @@ const PORT = process.env.PORT || 3002;
 
 mongoose.connect(
     `mongodb+srv://tictactoe:${process.env.DB_PASSWORD}@cluster0.80hf3.mongodb.net/${process.env.PROFILE}?retryWrites=true&w=majority`, 
-    { useNewUrlParser: true }
+    { 
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    }
 );
 
 app.listen(PORT, () => {

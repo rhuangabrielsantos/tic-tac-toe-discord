@@ -16,6 +16,7 @@
 - ✏️ `mark [posicao]` - Marca uma casa
 - 🔍 `board` - Exibe o tabuleiro
 - 🐓 `end` - Termina uma partida
+- 🏆 `ranking` - Exibe o ranking do servidor
 
 ## Contribuidores ✨
 
