@@ -1,6 +1,7 @@
 const { generateEmptyBoard, getBoard, generateBoardView } = require('../Services/BoardService')
 const { createEmbedAlert, getIdPlayerByMessage } = require('../utils');
 const { createGame, acceptGameService, markACell, verifyIfIsGameOver, endGame, awaitReaction } = require('../Services/GameService');
+const { generateRanking } = require('../Services/RankingService');
 
 async function play (players, messageInstance) {
     const board = generateEmptyBoard();
@@ -86,13 +87,18 @@ async function end(action, message) {
     message.reply('Ficou com medinho, foi? O jogo foi finalizado! :clown:');
 }
 
+async function ranking(action, message) {
+    let ranking = await generateRanking(message);
+}
+
 function recordedCommands () {
     return {
         play,
         mark,
         board,
         help,
-        end
+        end,
+        ranking
     }
 }
 
