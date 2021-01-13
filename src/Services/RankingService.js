@@ -18,7 +18,7 @@ async function generateRanking(messageInstance) {
 }
 
 async function giveScoreToPlayer(playerId, guildId) {
-    const playerScore = await RankingRepository.getScoreByPlayer(playerId);
+    const playerScore = await RankingRepository.getScoreByPlayer(guildId, playerId);
     
     if(playerScore) {
         const newPlayerScore = playerScore.score + 1;

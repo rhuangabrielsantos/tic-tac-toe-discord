@@ -36,7 +36,7 @@ async function acceptGame (client, reaction, user) {
 
 async function mark (action, messageInstance) {
     let refreshedBoard = await markACell(action, messageInstance);
-    let idPlayer = getIdPlayerByMessage(messageInstance);
+    let idPlayer = getIdPlayerByMessage(messageInstance).toString();
 
     if (refreshedBoard.view) {
         messageInstance.channel.send(refreshedBoard.view);
