@@ -2,11 +2,11 @@ const { Schema, model } = require('mongoose');
 
 const RankingSchema = new Schema ({
     'guild_id': {
-        type: Number,
+        type: String,
         required: true
     },
     'player_id': {
-        type: Number,
+        type: String,
         required: true
     },
     'score': {

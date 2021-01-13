@@ -36,7 +36,7 @@ function getFirstValueInTheArray(array) {
 }
 
 function getPlayerNumber(playerGame, idPlayer) {
-    if (parseInt(idPlayer) === playerGame.first_player) {
+    if (idPlayer === playerGame.first_player) {
         return marks.X;
     }
 

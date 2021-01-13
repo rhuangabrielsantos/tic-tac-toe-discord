@@ -11,9 +11,10 @@ class RankingRepository {
         .exec();
     }
 
-    static async getScoreByPlayer(playerId) {
+    static async getScoreByPlayer(guildId, playerId) {
         return await Ranking.findOne({
-            player_id: playerId 
+            guild_id: guildId,
+            player_id: playerId
         })
         .exec();
     }

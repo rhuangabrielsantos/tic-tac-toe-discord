@@ -33,7 +33,7 @@ async function createGame(players, messageInstance, boardMarkings) {
 }
 
 async function acceptGameService(client, reaction, user) {
-    let idPlayer = parseInt(user.id);
+    let idPlayer = user.id;
     let emoji = reaction._emoji.name;
     let channelId = reaction.message.channel.id;
 
