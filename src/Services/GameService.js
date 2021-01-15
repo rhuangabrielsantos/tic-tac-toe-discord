@@ -1,7 +1,7 @@
 const Game = require('../Models/Game');
 const { validatePlayNewGame } = require('../Validator/PlayValidator');
 const { validateMarkACell } = require('../Validator/MarkValidator');
-const { formatAdversaryId, getPlayerNumber, getFirstValueInTheArray, createEmbedAlert, getIdPlayerByMessage } = require('../utils');
+const { getIdByPlayerMention, getPlayerNumber, getFirstValueInTheArray, createEmbedAlert, getIdPlayerByMessage } = require('../utils');
 const { getGameByPlayerId, refreshMarkingsInBoardByPlayerId, deleteGame, activateGame } = require("../Repositories/PlayerRepository");
 const { refreshBoard } = require("./BoardService");
 const { verifyIfHasAWinner, verifyIfIsBoardFull } = require('../Validator/GameValidator');
@@ -13,7 +13,7 @@ const { marks } = require('../Models/Enum/CellEnum');
 
 async function createGame(players, messageInstance, boardMarkings) {
     const idFirstPlayer = messageInstance.author.id;
-    const idSecondPlayer = formatAdversaryId(players[0]);
+    const idSecondPlayer = getIdByPlayerMention(players[0]);
     const guildId = messageInstance.channel.guild.id;
 
     const newGameIsNotValid = await validatePlayNewGame(players, idFirstPlayer, idSecondPlayer, messageInstance);
