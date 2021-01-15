@@ -110,14 +110,21 @@ async function verifyIfIsGameOver(markings, playerId) {
 }
 
 async function endGame(messageInstance) {
-    let idPlayer = getIdPlayerByMessage(messageInstance);
-    let gameDoesNotActive = await validateEndGame(idPlayer, messageInstance);
+    const idPlayer = getIdPlayerByMessage(messageInstance);
+    const gameDoesNotActive = await validateEndGame(idPlayer, messageInstance);
 
     if (gameDoesNotActive) {
         return true;
     }
 
+    const gameDescription = getFirstValueInTheArray(await getGameByPlayerId(idPlayer));
+
+    const adversaryId = gameDescription.first_player === idPlayer 
+        ? gameDescription.second_player
+        : gameDescription.first_player;
+
     await deleteGame(idPlayer);
+    await giveScoreToPlayer(adversaryId, gameDescription.guild_id);
 
     return false;
 }
