@@ -1,5 +1,5 @@
-const { MessageEmbed } = import('discord.js');
-const { marks } = import('./Models/Enum/CellEnum');
+const { MessageEmbed } = require('discord.js');
+const { marks } = require('./Models/Enum/CellEnum');
 
 const getArgumentsByDiscordMessage = message => {
     const commandBody = message.content.split(' ');
