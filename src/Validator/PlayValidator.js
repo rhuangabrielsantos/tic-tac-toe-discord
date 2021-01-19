@@ -1,4 +1,4 @@
-const { createEmbedAlert, formatAdversaryId, verifyArrayIsEmpty } = require('../utils');
+const { createEmbedAlert, getIdByPlayerMention, verifyArrayIsEmpty } = require('../utils');
 const { getGameByPlayerId } = require('../Repositories/PlayerRepository');
 
 const ERROR = 1;
@@ -59,7 +59,7 @@ function validateMoreThanOneAdversary(players) {
 }
 
 function validateAdversaryIsValid(players, messageInstance) {
-    const adversaryId = formatAdversaryId(players[0]);
+    const adversaryId = getIdByPlayerMention(players[0]);
     const guild = messageInstance.guild
 
     if (messageInstance.author.id === adversaryId) {

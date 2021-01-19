@@ -1,5 +1,5 @@
-const { MessageEmbed } = require('discord.js');
-const { marks } = require('./Models/Enum/CellEnum')
+const { MessageEmbed } = import('discord.js');
+const { marks } = import('./Models/Enum/CellEnum');
 
 const getArgumentsByDiscordMessage = message => {
     const commandBody = message.content.split(' ');
@@ -19,12 +19,12 @@ function createEmbedAlert(title, description) {
             .setDescription(description);
 }
 
-function formatAdversaryId(adversaryMention) {
-    if(!adversaryMention) {
-        return;
+function getIdByPlayerMention(mention) {
+    if(!mention) {
+        return null;
     }
 
-    return adversaryMention.replace('<@!', '').replace('>', '')
+    return mention.replace('<@!', '').replace('>', '')
 }
 
 function verifyArrayIsEmpty(array) {
@@ -79,7 +79,7 @@ function getIdPlayerByMessage(messageInstance) {
 module.exports = { 
     getArgumentsByDiscordMessage, 
     createEmbedAlert, 
-    formatAdversaryId,
+    getIdByPlayerMention,
     verifyArrayIsEmpty,
     getFirstValueInTheArray,
     getPlayerNumber,
