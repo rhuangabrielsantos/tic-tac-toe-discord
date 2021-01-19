@@ -24,7 +24,9 @@ function getIdByPlayerMention(mention) {
         return null;
     }
 
-    return mention.replace('<@!', '').replace('>', '')
+    return mention.replace(/<@!(\d+)>/, (regexMath, idNumber) => {
+        return idNumber;
+    });
 }
 
 function verifyArrayIsEmpty(array) {
