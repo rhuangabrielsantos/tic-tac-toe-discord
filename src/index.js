@@ -11,12 +11,12 @@ client.on('message', message => {
     if (message.author.not) return;
     if (!message.content.startsWith(process.env.PREFIX)) return;
 
-    const arguments = getArgumentsByDiscordMessage(message);
+    const messageArguments = getArgumentsByDiscordMessage(message);
     const commands = recordedCommands();
-    const action = commands[arguments.command];
+    const action = commands[messageArguments.command];
 
     if (action) {
-        action(arguments.action, message);
+        action(messageArguments.action, message);
     }
 });
 
