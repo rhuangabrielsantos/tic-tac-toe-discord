@@ -3,7 +3,7 @@ require('./server');
 
 const { Client } = require('discord.js');
 const { getArgumentsByDiscordMessage } = require('./utils');
-const { recordedCommands, acceptGame } = require('./Controllers/GameController');
+const { recordedCommands } = require('./Controllers/GameController');
 
 const client = new Client();
 
