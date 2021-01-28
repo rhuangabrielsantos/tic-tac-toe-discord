@@ -4,25 +4,26 @@ const { getGameByPlayerId } = require('../Repositories/PlayerRepository');
 const ERROR = 1;
 
 async function validatePlayNewGame(players, idFirstPlayer, idSecondPlayer, messageInstance) {
-    let error = 0;
+    let countError = 0;
     let message = [];
     let validations = [];
 
     validations.push(validateSecondPlayerNull(players));
     validations.push(validateMoreThanOneAdversary(players));
     validations.push(validateAdversaryIsValid(players, messageInstance));
+    validations.push(validateAdversaryIsABot(messageInstance));
     validations.push(await validateWhetherPlayersAlreadyHaveAnActivatedGame(idFirstPlayer, idSecondPlayer));
 
     validations.forEach(validate => {
         if(validate.error === ERROR) {
             message.push(validate.message);
-            error += validate.error;
+            countError += validate.error;
         }
     });
 
-    if (error >= ERROR) {
+    if (countError >= ERROR) {
         messageInstance.channel.send(message.shift())
-        return error;
+        return countError;
     }
 }
 
@@ -106,6 +107,28 @@ async function validateWhetherPlayersAlreadyHaveAnActivatedGame(idFirstPlayer, i
     }
 
     return {};
+}
+
+function validateAdversaryIsABot(messageInstance) {
+    const mentionedUsers = messageInstance.mentions.users;
+
+    const userIsABot = mentionedUsers.map(user => {
+        let embed = createEmbedAlert(
+            'O usuário é um bot espertinho :clown:',
+            'Você só pode jogar com pessoas reais'
+        );
+
+        if (user.bot === true) {
+            return {
+                error: 1,
+                message: embed
+            };
+        }
+
+        return {};
+    })
+
+    return userIsABot[0];
 }
 
 module.exports = { 
