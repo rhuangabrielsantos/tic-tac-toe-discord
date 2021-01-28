@@ -1,7 +1,9 @@
 const { generateEmptyBoard, getBoard, generateBoardView } = require('../Services/BoardService')
-const { createEmbedAlert, getIdPlayerByMessage } = require('../utils');
-const { createGame, acceptGameService, markACell, verifyIfIsGameOver, endGame, awaitReaction } = require('../Services/GameService');
+const { createEmbedAlert, getIdPlayerByMessage, getIdByPlayerMention, getFirstValueInTheArray } = require('../utils');
+const { createGame, markACell, verifyIfIsGameOver, endGame } = require('../Services/GameService');
 const { generateRanking } = require('../Services/RankingService');
+const MessageService = require('../Services/MessageService');
+const { activateGame, getGameByPlayerId, deleteGame } = require('../Repositories/PlayerRepository');
 
 async function play (players, messageInstance) {
     const board = generateEmptyBoard();
@@ -9,28 +11,53 @@ async function play (players, messageInstance) {
     let gameIsCreated = await createGame(players, messageInstance, board.markings);
 
     if (gameIsCreated) {
-        let secondPlayer = players[0];
-        let message = await messageInstance.channel.send(secondPlayer + ', você aceita o desafio?');
+        const secondPlayer = players[0];
 
-        message.react('✅')
-            .then(() => message.react('⛔'))
+        const idSecondPlayer = getIdByPlayerMention(secondPlayer);
+        
+        messageInstance.channel.send(secondPlayer + ', você aceita o desafio?')
+            .then(async (message) => {
+                await message.react('✅').then(() => message.react('⛔'));
+
+                message.awaitReactions((reaction, user) => user.id == idSecondPlayer && (reaction.emoji.name == '✅' || reaction.emoji.name == '⛔'), { max: 1, time: 30000 })
+                    .then(async collected => {
+                        message.delete();
+
+                        if(collected.first().emoji.name == '✅') {
+                            MessageService.sendMessageToGuild(message, 'Desafio foi aceito!');
+                            await acceptGame(message, idSecondPlayer);
+                            
+                            return;
+                        }
+                        await deleteGame(idSecondPlayer);
+
+                        MessageService.sendMessageToGuild(message, 'Desafio não foi aceito!');
+                    }).catch(async () => {
+                        message.delete();
+                        
+                        await deleteGame(idSecondPlayer);
+
+                        MessageService.sendMessageToGuild(message, 'Acabou o tempo e o desafio não foi aceito!');
+                    });
+            });;
     }
 }
 
-async function acceptGame (client, reaction, user) {
-    const gameDescription = await acceptGameService(client, reaction, user);
-    const channelId = reaction.message.channel.id;
+async function acceptGame (message, idPlayer) {
+    const gameDescription = getFirstValueInTheArray(await getGameByPlayerId(idPlayer));
 
     if (!gameDescription) {
         return;
     }
 
+    await activateGame(idPlayer);
+
     const board = generateBoardView(gameDescription.marked_board);
     const mentionFirstPlayer = `<@!${gameDescription.first_player}>`
 
     if (gameDescription) {
-        client.channels.cache.get(channelId).send(mentionFirstPlayer + 'você começa!');
-        client.channels.cache.get(channelId).send(board);
+        MessageService.sendMessageToGuild(message, mentionFirstPlayer + 'você começa!');
+        MessageService.sendMessageToGuild(message, board);
     }
 }
 

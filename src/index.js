@@ -20,10 +20,4 @@ client.on('message', message => {
     }
 });
 
-client.on('messageReactionAdd', async (reaction, user) => {
-    if (user.bot === true) return;
-
-    await acceptGame(client, reaction, user)
-});
-
 client.login(process.env.BOT_TOKEN);
