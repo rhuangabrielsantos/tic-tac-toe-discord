@@ -7,6 +7,15 @@ const { recordedCommands, acceptGame } = require('./Controllers/GameController')
 
 const client = new Client();
 
+client.on('ready', () => {
+    client.user.setPresence({
+        activity: {
+            name: process.env.PREFIX + ' help',
+            type: "PLAYING"
+        }
+    });
+});
+
 client.on('message', message => {
     if (message.author.not) return;
     if (!message.content.startsWith(process.env.PREFIX)) return;
