@@ -3,6 +3,8 @@ const { createEmbedAlert, getIdPlayerByMessage } = require('../utils');
 const { createGame, acceptGameService, markACell, verifyIfIsGameOver, endGame, awaitReaction } = require('../Services/GameService');
 const { generateRanking } = require('../Services/RankingService');
 
+const HelpService = require('../Services/HelpService');
+
 async function play (players, messageInstance) {
     const board = generateEmptyBoard();
 
@@ -60,22 +62,10 @@ async function board (action, message) {
     message.channel.send(board);
 }
 
-function help (action, message) {
-    const description = 
-        'Adicione **' + process.env.PREFIX + '** antes de qualquer comando\n\n' +
-        ':loudspeaker: `play [adversario]` - Inicia um novo jogo\n' +
-        ':pencil2: `mark [posicao]` - Marca uma casa\n' +
-        ':rooster: `end` - Termina uma partida\n' +
-        ':mag: `board` - Exibe o tabuleiro\n' +
-        ':trophy: `ranking` - Exibe o ranking do servidor\n\n' +
-        'Desenvolvido por **@rhuangabrielsantos @anaclaudialimacosta**';
+function help (action, messageInstance) {
+    const message = HelpService.createMessage(action[0]);
 
-    const embed = createEmbedAlert(
-        ':robot:  Comandos Tic Tac Toe  :robot:',
-        description
-    )
-
-    message.channel.send(embed);
+    messageInstance.channel.send(message);
 }
 
 async function end(action, message) {
