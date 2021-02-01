@@ -2,11 +2,10 @@ const Game = require('../Models/Game');
 const { validatePlayNewGame } = require('../Validator/PlayValidator');
 const { validateMarkACell } = require('../Validator/MarkValidator');
 const { getIdByPlayerMention, getPlayerNumber, getFirstValueInTheArray, createEmbedAlert, getIdPlayerByMessage } = require('../utils');
-const { getGameByPlayerId, refreshMarkingsInBoardByPlayerId, deleteGame, activateGame } = require("../Repositories/PlayerRepository");
+const { getGameByPlayerId, refreshMarkingsInBoardByPlayerId, deleteGame } = require("../Repositories/PlayerRepository");
 const { refreshBoard } = require("./BoardService");
 const { verifyIfHasAWinner, verifyIfIsBoardFull } = require('../Validator/GameValidator');
 const { validateEndGame } = require('../Validator/EndGameValidator');
-const { validateAcceptGame } = require('../Validator/AcceptGameValidator');
 const { giveScoreToPlayer } = require('./RankingService');
 
 const { marks } = require('../Models/Enum/CellEnum');
@@ -30,30 +29,6 @@ async function createGame(players, messageInstance, boardMarkings) {
     });
 
     return true;
-}
-
-async function acceptGameService(client, reaction, user) {
-    let idPlayer = user.id;
-    let emoji = reaction._emoji.name;
-    let channelId = reaction.message.channel.id;
-
-    let gameDescription = await validateAcceptGame(idPlayer);
-
-    if (!gameDescription) {
-        return;
-    }
-
-    if (emoji === '✅' && gameDescription.second_player === idPlayer) {
-        client.channels.cache.get(channelId).send('O desafio foi aceito!');
-        activateGame(idPlayer);
-        return gameDescription;
-    }
-
-    if (emoji === '⛔' && gameDescription.second_player === idPlayer) {
-        client.channels.cache.get(channelId).send('Ih, ficou com medinho :clown:');
-        deleteGame(idPlayer);
-        return;
-    }
 }
 
 async function markACell(action, messageInstance) {
@@ -133,6 +108,5 @@ module.exports = {
     createGame, 
     markACell,
     verifyIfIsGameOver,
-    endGame,
-    acceptGameService
+    endGame
 }
