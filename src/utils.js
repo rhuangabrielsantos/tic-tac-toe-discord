@@ -19,6 +19,13 @@ function createEmbedAlert(title, description) {
             .setDescription(description);
 }
 
+function createEmbedHelp(title, description) {
+    return new MessageEmbed()
+            .setTitle(title)
+            .setColor('#f5f542')
+            .setDescription(description);
+}
+
 function getIdByPlayerMention(mention) {
     if(!mention) {
         return null;
@@ -81,6 +88,7 @@ function getIdPlayerByMessage(messageInstance) {
 module.exports = { 
     getArgumentsByDiscordMessage, 
     createEmbedAlert, 
+    createEmbedHelp,
     getIdByPlayerMention,
     verifyArrayIsEmpty,
     getFirstValueInTheArray,
