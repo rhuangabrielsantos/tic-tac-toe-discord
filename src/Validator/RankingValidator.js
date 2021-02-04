@@ -1,8 +1,10 @@
-const MessageService = require('../Services/MessageService');
+const MessengerService = require('../Services/MessengerService');
 
 async function validateRankingIsEmpty(ranking, messageInstance) {
     if(ranking.length === 0) {
-        MessageService.sendReplyToGuild(messageInstance, 'Não foi encontrada nenhuma informação, você precisa jogar uma partida antes de ver o ranking')
+    
+        const messanger = new MessengerService(messageInstance);
+        messanger.sendReplyToGuild('Não foi encontrada nenhuma informação, você precisa jogar uma partida antes de ver o ranking')
 
         return true;
     }

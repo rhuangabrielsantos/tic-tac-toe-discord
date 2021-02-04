@@ -1,6 +1,6 @@
 const RankingRepository = require('../Repositories/RankingRepository');
 const { validateRankingIsEmpty } = require('../Validator/RankingValidator');
-const MessageService = require('./MessageService');
+const MessengerService = require('./MessengerService');
 
 async function generateRanking(messageInstance) {
     const guildId = messageInstance.channel.guild.id;
@@ -14,7 +14,9 @@ async function generateRanking(messageInstance) {
 
     const message = generateRankingMessage(rankings);
 
-    MessageService.sendMessageToGuild(messageInstance, message)
+    const messenger = new MessengerService(messageInstance)
+    
+    messenger.sendSimpleMessageToGuild(message);
 }
 
 async function giveScoreToPlayer(playerId, guildId) {
