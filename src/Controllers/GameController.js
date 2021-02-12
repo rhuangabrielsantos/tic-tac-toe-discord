@@ -103,7 +103,7 @@ async function mark (action, messageInstance) {
     if (refreshedBoard.view) {
         const playerGame = getFirstValueInTheArray(await getGameByPlayerId(idPlayer));
     
-        const idNextPlayer = idPlayer === playerGame.first_player ? playerGame.first_player : playerGame.second_player;
+        const idNextPlayer = idPlayer === playerGame.first_player ? playerGame.second_player : playerGame.first_player;
         const mentionNextPlayer = `<@!${idNextPlayer}>`;
         
         messenger.sendSimpleMessageToGuild(`É a sua vez ${mentionNextPlayer}!`)
