@@ -4,7 +4,9 @@ const { getGameByPlayerId } = require("../Repositories/PlayerRepository");
 const { validateIfPlayerHasActiveGame } = require("./GameValidator")
 const ERROR = 1;
 
-let defaultEmbed = createEmbedAlert(
+const MessengerService = require('../Services/MessengerService');
+
+const defaultEmbed = createEmbedAlert(
     'Você deve marcar uma casa válida :clown:',
     'Para marcar uma casa, envie **' + process.env.PREFIX + ' mark A1**\nPara visualizar o board, envie **' + process.env.PREFIX + ' board**'
 );
@@ -32,7 +34,9 @@ async function validateMarkACell(idPlayer, action, messageInstance) {
     });
 
     if (error >= ERROR) {
-        messageInstance.channel.send(message.shift())
+        const messenger = new MessengerService(messageInstance);
+        messenger.sendSimpleMessageToGuild(message.shift());
+
         return error;
     }
 }
@@ -114,7 +118,7 @@ function validateIfIsPlayerTurn(playerGame, idPlayer) {
     
     let embed = createEmbedAlert(
         'Não é a sua vez princeso, pera ae :clown:',
-        ''
+        'Espere seu adversário jogar.'
     );
 
     return {
@@ -129,9 +133,7 @@ function validateThatTheGameWasAccepted(playerGame) {
     if (game.active === false) {
         let embed = createEmbedAlert(
             'O adversário não aceitou o jogo ainda princeso, pera ae :clown:',
-            ''
-        );
-        
+            'Espere seu adversário aceitar a partida');
         return {
             error: ERROR,
             message: embed

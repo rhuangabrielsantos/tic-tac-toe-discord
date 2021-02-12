@@ -1,6 +1,8 @@
 const { getGameByPlayerId } = require("../Repositories/PlayerRepository");
 const { validateIfPlayerHasActiveGame } = require("./GameValidator");
 
+const MessengerService = require('../Services/MessengerService');
+
 const ERROR = 1;
 
 async function validateEndGame(idPlayer, messageInstance) {
@@ -20,7 +22,9 @@ async function validateEndGame(idPlayer, messageInstance) {
     });
 
     if (error >= ERROR) {
-        messageInstance.channel.send(message.shift())
+        const messenger = new MessengerService(messageInstance);
+        messenger.sendSimpleMessageToGuild(message.shift())
+
         return error;
     }
 }
