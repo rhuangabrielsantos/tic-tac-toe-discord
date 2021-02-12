@@ -35,7 +35,7 @@ async function markACell(action, messageInstance) {
     const idPlayer = getIdPlayerByMessage(messageInstance);
 
     const markIsNotValid = await validateMarkACell(idPlayer, action, messageInstance);
-    const typedCell = getFirstValueInTheArray(action);
+    const typedCell = getFirstValueInTheArray(action).toUpperCase();
 
     if(markIsNotValid) {
         return false;

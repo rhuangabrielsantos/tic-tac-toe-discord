@@ -14,7 +14,7 @@ async function validateMarkACell(idPlayer, action, messageInstance) {
     let message = [];
     let validations = [];
 
-    let typedCell = getFirstValueInTheArray(action);
+    let typedCell = getFirstValueInTheArray(action).toUpperCase();
     let playerGame = await getGameByPlayerId(idPlayer);
 
     validations.push(validateTypedCellLength(action));
