@@ -6,7 +6,7 @@ const ERROR = 1;
 
 let defaultEmbed = createEmbedAlert(
     'Você deve marcar uma casa válida :clown:',
-    'Para marcar uma casa, envie **' + process.env.PREFIX + ' mark A1**\nPara visualizar o board, envie **' + process.env.PREFIX + ' board**'
+    'Para marcar uma casa, envie **' + process.env.BOT_PREFIX + ' mark A1**\nPara visualizar o board, envie **' + process.env.BOT_PREFIX + ' board**'
 );
 
 async function validateMarkACell(idPlayer, action, messageInstance) {

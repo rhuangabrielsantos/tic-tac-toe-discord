@@ -31,7 +31,7 @@ function validateSecondPlayerNull(players) {
     if (players.length === 0) {
         let embed = createEmbedAlert(
             'Você precisa informar o jogador adversário :clown:',
-            'Para verificar os comandos digite **' + process.env.PREFIX + ' help**'
+            'Para verificar os comandos digite **' + process.env.BOT_PREFIX + ' help**'
         );
 
         return {
@@ -47,7 +47,7 @@ function validateMoreThanOneAdversary(players) {
     if (players.length > 1) {
         let embed = createEmbedAlert(
             'Você deve informar apenas um adversário :clown:',
-            'Para verificar os comandos digite **' + process.env.PREFIX + ' help**'
+            'Para verificar os comandos digite **' + process.env.BOT_PREFIX + ' help**'
         );
 
         return {
@@ -66,7 +66,7 @@ function validateAdversaryIsValid(players, messageInstance) {
     if (messageInstance.author.id === adversaryId) {
         let embed = createEmbedAlert(
             'Você não pode jogar com você mesmo espertão :clown:',
-            'Para verificar os comandos digite **' + process.env.PREFIX + ' help**'
+            'Para verificar os comandos digite **' + process.env.BOT_PREFIX + ' help**'
         );
 
         return {
@@ -78,7 +78,7 @@ function validateAdversaryIsValid(players, messageInstance) {
     if(!guild.member(adversaryId)) {
         let embed = createEmbedAlert(
             'Usuário inválido :clown:',
-            'Mencione o usuário. Exemplo: **' + process.env.PREFIX + ' play @TioPatinhas**'
+            'Mencione o usuário. Exemplo: **' + process.env.BOT_PREFIX + ' play @TioPatinhas**'
         );
 
         return {
@@ -97,7 +97,7 @@ async function validateWhetherPlayersAlreadyHaveAnActivatedGame(idFirstPlayer, i
     if (!verifyArrayIsEmpty(firstHasAlreadyAGame) || !verifyArrayIsEmpty(secondHasAlreadyAGame)) {
         let embed = createEmbedAlert(
             'Você já possui uma partida em andamento :clown:',
-            'Para visualizar o jogo em andamento, envie **' + process.env.PREFIX + ' board**'
+            'Para visualizar o jogo em andamento, envie **' + process.env.BOT_PREFIX + ' board**'
         );
 
         return {
