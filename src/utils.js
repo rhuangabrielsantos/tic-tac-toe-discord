@@ -13,8 +13,12 @@ const getArgumentsByDiscordMessage = message => {
 }
 
 function createEmbedAlert(title, description) {
+    const logo = 'https://cdn.discordapp.com/app-icons/787531206619037736/66096ebede1d6464b43e6afa657cdc8c.png?size=256';
+
     return new MessageEmbed()
+            .setAuthor('TicTacToe', logo, 'https://github.com/rhuangabrielsantos/tic-tac-toe-discord')
             .setTitle(title)
+            .setTimestamp()
             .setColor(0xff0000)
             .setDescription(description);
 }

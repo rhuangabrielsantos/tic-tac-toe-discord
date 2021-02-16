@@ -1,6 +1,8 @@
 const { createEmbedAlert, getIdByPlayerMention, verifyArrayIsEmpty } = require('../utils');
 const { getGameByPlayerId } = require('../Repositories/PlayerRepository');
 
+const MessengerService = require('../Services/MessengerService');
+
 const ERROR = 1;
 
 async function validatePlayNewGame(players, idFirstPlayer, idSecondPlayer, messageInstance) {
@@ -22,7 +24,9 @@ async function validatePlayNewGame(players, idFirstPlayer, idSecondPlayer, messa
     });
 
     if (countError >= ERROR) {
-        messageInstance.channel.send(message.shift())
+        const messenger = new MessengerService(messageInstance);
+        messenger.sendSimpleMessageToGuild(message.shift());
+
         return countError;
     }
 }
@@ -31,7 +35,7 @@ function validateSecondPlayerNull(players) {
     if (players.length === 0) {
         let embed = createEmbedAlert(
             'Você precisa informar o jogador adversário :clown:',
-            'Para verificar os comandos digite **' + process.env.BOT_PREFIX + ' help**'
+            'Para verificar como utilizar este comando, digite `' + process.env.BOT_PREFIX + ' help play`'
         );
 
         return {
@@ -47,7 +51,7 @@ function validateMoreThanOneAdversary(players) {
     if (players.length > 1) {
         let embed = createEmbedAlert(
             'Você deve informar apenas um adversário :clown:',
-            'Para verificar os comandos digite **' + process.env.BOT_PREFIX + ' help**'
+            'Para verificar como utilizar este comando, digite `' + process.env.BOT_PREFIX + ' help play`'
         );
 
         return {
@@ -66,7 +70,7 @@ function validateAdversaryIsValid(players, messageInstance) {
     if (messageInstance.author.id === adversaryId) {
         let embed = createEmbedAlert(
             'Você não pode jogar com você mesmo espertão :clown:',
-            'Para verificar os comandos digite **' + process.env.BOT_PREFIX + ' help**'
+            'Para verificar como utilizar este comando, digite `' + process.env.BOT_PREFIX + ' help play`'
         );
 
         return {
@@ -78,7 +82,7 @@ function validateAdversaryIsValid(players, messageInstance) {
     if(!guild.member(adversaryId)) {
         let embed = createEmbedAlert(
             'Usuário inválido :clown:',
-            'Mencione o usuário. Exemplo: **' + process.env.BOT_PREFIX + ' play @TioPatinhas**'
+            'Para verificar como utilizar este comando, digite `' + process.env.BOT_PREFIX + ' help play`'
         );
 
         return {
@@ -97,7 +101,7 @@ async function validateWhetherPlayersAlreadyHaveAnActivatedGame(idFirstPlayer, i
     if (!verifyArrayIsEmpty(firstHasAlreadyAGame) || !verifyArrayIsEmpty(secondHasAlreadyAGame)) {
         let embed = createEmbedAlert(
             'Você já possui uma partida em andamento :clown:',
-            'Para visualizar o jogo em andamento, envie **' + process.env.BOT_PREFIX + ' board**'
+            'Para visualizar o jogo em andamento, envie `' + process.env.BOT_PREFIX + ' board`\n'
         );
 
         return {
