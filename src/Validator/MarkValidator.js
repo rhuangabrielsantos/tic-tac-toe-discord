@@ -8,7 +8,7 @@ const MessengerService = require('../Services/MessengerService');
 
 const defaultEmbed = createEmbedAlert(
     'Você deve marcar uma casa válida :clown:',
-    'Para marcar uma casa, envie **' + process.env.PREFIX + ' mark A1**\nPara visualizar o board, envie **' + process.env.PREFIX + ' board**'
+    'Para marcar uma casa, envie **' + process.env.BOT_PREFIX + ' mark A1**\nPara visualizar o board, envie **' + process.env.BOT_PREFIX + ' board**'
 );
 
 async function validateMarkACell(idPlayer, action, messageInstance) {
@@ -16,7 +16,7 @@ async function validateMarkACell(idPlayer, action, messageInstance) {
     let message = [];
     let validations = [];
 
-    let typedCell = getFirstValueInTheArray(action);
+    let typedCell = getFirstValueInTheArray(action).toUpperCase();
     let playerGame = await getGameByPlayerId(idPlayer);
 
     validations.push(validateTypedCellLength(action));

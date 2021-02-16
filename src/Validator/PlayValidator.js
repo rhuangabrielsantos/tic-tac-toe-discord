@@ -35,7 +35,7 @@ function validateSecondPlayerNull(players) {
     if (players.length === 0) {
         let embed = createEmbedAlert(
             'Você precisa informar o jogador adversário :clown:',
-            'Para verificar como utilizar este comando, digite `' + process.env.PREFIX + ' help play`'
+            'Para verificar como utilizar este comando, digite `' + process.env.BOT_PREFIX + ' help play`'
         );
 
         return {
@@ -51,7 +51,7 @@ function validateMoreThanOneAdversary(players) {
     if (players.length > 1) {
         let embed = createEmbedAlert(
             'Você deve informar apenas um adversário :clown:',
-            'Para verificar como utilizar este comando, digite `' + process.env.PREFIX + ' help play`'
+            'Para verificar como utilizar este comando, digite `' + process.env.BOT_PREFIX + ' help play`'
         );
 
         return {
@@ -70,7 +70,7 @@ function validateAdversaryIsValid(players, messageInstance) {
     if (messageInstance.author.id === adversaryId) {
         let embed = createEmbedAlert(
             'Você não pode jogar com você mesmo espertão :clown:',
-            'Para verificar como utilizar este comando, digite `' + process.env.PREFIX + ' help play`'
+            'Para verificar como utilizar este comando, digite `' + process.env.BOT_PREFIX + ' help play`'
         );
 
         return {
@@ -82,7 +82,7 @@ function validateAdversaryIsValid(players, messageInstance) {
     if(!guild.member(adversaryId)) {
         let embed = createEmbedAlert(
             'Usuário inválido :clown:',
-            'Para verificar como utilizar este comando, digite `' + process.env.PREFIX + ' help play`'
+            'Para verificar como utilizar este comando, digite `' + process.env.BOT_PREFIX + ' help play`'
         );
 
         return {
@@ -101,7 +101,7 @@ async function validateWhetherPlayersAlreadyHaveAnActivatedGame(idFirstPlayer, i
     if (!verifyArrayIsEmpty(firstHasAlreadyAGame) || !verifyArrayIsEmpty(secondHasAlreadyAGame)) {
         let embed = createEmbedAlert(
             'Você já possui uma partida em andamento :clown:',
-            'Para visualizar o jogo em andamento, envie `' + process.env.PREFIX + ' board`\n'
+            'Para visualizar o jogo em andamento, envie `' + process.env.BOT_PREFIX + ' board`\n'
         );
 
         return {
