@@ -10,7 +10,7 @@ const client = new Client();
 client.on('ready', () => {
     client.user.setPresence({
         activity: {
-            name: process.env.PREFIX + ' help',
+            name: process.env.BOT_PREFIX + ' help',
             type: "PLAYING"
         }
     });
@@ -18,7 +18,7 @@ client.on('ready', () => {
 
 client.on('message', message => {
     if (message.author.not) return;
-    if (!message.content.startsWith(process.env.PREFIX)) return;
+    if (!message.content.startsWith(process.env.BOT_PREFIX)) return;
 
     const messageArguments = getArgumentsByDiscordMessage(message);
     const commands = recordedCommands();
