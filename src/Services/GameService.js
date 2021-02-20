@@ -1,12 +1,13 @@
 const Game = require('../Models/Game');
 const { validatePlayNewGame } = require('../Validator/PlayValidator');
 const { validateMarkACell } = require('../Validator/MarkValidator');
-const { getIdByPlayerMention, getPlayerNumber, getFirstValueInTheArray, createEmbedAlert, getIdPlayerByMessage } = require('../utils');
+const { getIdByPlayerMention, getPlayerNumber, getFirstValueInTheArray, getIdPlayerByMessage } = require('../utils');
 const { getGameByPlayerId, refreshMarkingsInBoardByPlayerId, deleteGame } = require("../Repositories/PlayerRepository");
 const { refreshBoard } = require("./BoardService");
-const { verifyIfHasAWinner, verifyIfIsBoardFull } = require('../Validator/GameValidator');
-const { validateEndGame } = require('../Validator/EndGameValidator');
+const { validateEndGame, verifyIfIsGameOver } = require('../Validator/EndGameValidator');
 const { giveScoreToPlayer } = require('./RankingService');
+
+const MessengerService = require('../Services/MessengerService');
 
 const { marks } = require('../Models/Enum/CellEnum');
 
@@ -33,7 +34,6 @@ async function createGame(players, messageInstance, boardMarkings) {
 
 async function markACell(action, messageInstance) {
     const idPlayer = getIdPlayerByMessage(messageInstance);
-
     const markIsNotValid = await validateMarkACell(idPlayer, action, messageInstance);
     const typedCell = getFirstValueInTheArray(action).toUpperCase();
 
@@ -47,47 +47,21 @@ async function markACell(action, messageInstance) {
     const playerNumber = getPlayerNumber(playerGame, idPlayer);
 
     const refreshedBoard = refreshBoard(playerGame.marked_board, playerNumber, typedCell);
+
+    const isGameOver = await verifyIfIsGameOver(refreshedBoard.markings, idPlayer);
+    const messenger = new MessengerService(messageInstance);
+
+    if(isGameOver) {
+        const messageTitle = 'O jogo acabou!';
+
+        messenger.sendEmbedMessageToGuild(messageTitle, isGameOver);
+        messenger.sendSimpleMessageToGuild(refreshedBoard.view);
+        return false;
+    }
     
     await refreshMarkingsInBoardByPlayerId(idPlayer, refreshedBoard.markings);
 
     return refreshedBoard;
-}
-
-async function verifyIfIsGameOver(markings, playerId) {
-    if(!markings) {
-        return false;
-    }
-
-    const hasAWinner = verifyIfHasAWinner(markings);
-    const isBoardFull = verifyIfIsBoardFull(markings);
-
-    const playerGame = getFirstValueInTheArray(await getGameByPlayerId(playerId));
-
-    const firstPlayerMention = `<@!${playerGame.first_player}>`;
-    const secondPlayerMention = `<@!${playerGame.second_player}>`;
-
-    if(hasAWinner !== 0 || isBoardFull) {
-        await deleteGame(playerId)
-    }
-        
-    if(hasAWinner === marks.X) {
-        await giveScoreToPlayer(playerGame.first_player, playerGame.guild_id);
-
-        return `O ${firstPlayerMention} é o vencedor, quem sabe em uma próxima vez ${secondPlayerMention}!\n ` +
-            'Para visualizar o ranking do servidor envie `-t ranking`.';
-    }
-
-    if(hasAWinner === marks.O) {
-        await giveScoreToPlayer(playerGame.second_player, playerGame.guild_id);
-
-        return `O ${secondPlayerMention} é o vencedor, quem sabe em uma próxima vez ${firstPlayerMention}!\n ` +
-            'Para visualizar o ranking do servidor envie `-t ranking`.';
-    }
-
-    if(isBoardFull) {
-        return 'Ihh, deu velha. Ou os dois jogadores são muito bons, ou são muito ruins.\n' +
-            'Só tem um jeito de descobrir isso, vamos jogar novamente?';
-    }
 }
 
 async function endGame(messageInstance) {
