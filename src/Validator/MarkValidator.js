@@ -28,6 +28,7 @@ async function validateMarkACell(idPlayer, action, messageInstance) {
 
     validations.forEach(validate => {
         if(validate.error === ERROR) {
+            
             message.push(validate.message);
             error += validate.error;
         }
